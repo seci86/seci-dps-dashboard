@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>SECI Dashboard</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        font-size: 22px;
+      }
+      .tab-sidebar {
+        min-width: 220px;
+        border-right: 1px solid #ddd;
+        height: 100dvh;
+        position: sticky;
+        top: 0;
+      }
+      .tab-content-area {
+        flex-grow: 1;
+      }
+      .top-bar {
+        background-color: #f8f9fa;
+        padding: 15px 20px;
+        border-bottom: 1px solid #ddd;
+        font-weight: 500;
+        font-size: 1.2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .tab-button {
+        text-align: left;
+        width: 100%;
+      }
+      .tab-button.active {
+        background-color: #e9ecef;
+        font-weight: bold;
+      }
+      .dashboard-area,
+      .department-area {
+        padding: 20px;
+      }
+      .chart-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: relative;
+      }
+      .chart-title {
+        font-size: 1rem;
+        margin-top: 10px;
+      }
+      .chart-center-label {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+      .target-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 10px;
+      }
+      .overdue {
+        color: red;
+        font-weight: bold;
+      }
+      .upcoming {
+        color: green;
+        font-weight: bold;
+      }
+      .tab-sidebar.collapsed {
+        min-width: 70px;
+        max-width: 70px;
+      }
+      .tab-sidebar.collapsed .tab-text {
+        display: none;
+      }
+      .collapse-btn {
+        margin: 10px 0;
+      }
+      .selected-stat {
+        border: 2px solid #0d6efd;
+        box-shadow: 0 0 8px rgba(13, 110, 253, 0.5);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="d-flex">
+      <div class="tab-sidebar d-flex flex-column p-2 bg-light" id="sidebar">
+        <button class="btn btn-secondary btn-sm collapse-btn" id="collapseBtn">
+          <i class="bi bi-list"></i>
+        </button>
+        <div id="sidebarButtons" class="d-flex flex-column mt-2"></div>
+      </div>
+      <div class="tab-content-area d-flex flex-column w-100">
+        <div class="top-bar">
+          <span id="topBarTitle">SECI Dashboard > Home</span>
+          <div class="d-flex gap-2 mt-2 mt-md-0">
+            <button
+              class="btn btn-success btn-sm"
+              data-bs-toggle="modal"
+              data-bs-target="#statModal"
+            >
+              <i class="bi bi-plus-circle me-1"></i> Add Statistic
+            </button>
+            <button
+              class="btn btn-primary btn-sm"
+              data-bs-toggle="modal"
+              data-bs-target="#targetModal"
+            >
+              <i class="bi bi-flag me-1"></i> Add Targets
+            </button>
+          </div>
+        </div>
+        <div class="dashboard-area" id="homeArea">
+          <div class="row g-3" id="chartGrid"></div>
+        </div>
+        <div class="department-area d-none" id="departmentArea">
+          <div class="row g-3" id="departmentStats"></div>
+          <div class="mt-4" id="targetSection"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistic Modal -->
+    <div class="modal fade" id="statModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form id="statForm">
+            <div class="modal-header">
+              <h5 class="modal-title">Add Statistic</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label class="form-label">Department</label>
+                <select class="form-select" id="departmentSelect" required>
+                  <option disabled selected>Select Department</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Statistic Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="statName"
+                  maxlength="100"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Total</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="totalInput"
+                  min="1"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Current</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="currentInput"
+                  min="0"
+                  required
+                />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Target Modal -->
+    <div class="modal fade" id="targetModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form id="targetForm">
+            <div class="modal-header">
+              <h5 class="modal-title">Add Target</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label class="form-label">Department</label>
+                <select class="form-select" id="targetDepartment" required>
+                  <option disabled selected>Select Department</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Target Title</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="targetTitle"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Target Date</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="targetDate"
+                  required
+                />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Add Target</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const departments = [
+        "Home",
+        "Business Development",
+        "Contracts & Procurement",
+        "Energy Mangement",
+        "Projects",
+        "RESCO",
+        "Engineering",
+        "QA",
+        "O&M",
+      ];
+      const icons = [
+        "bi-house-door",
+        "bi-briefcase",
+        "bi-currency-rupee",
+        "bi-lightning-charge",
+        "bi-diagram-3",
+        "bi-building",
+        "bi-tools",
+        "bi-shield-check",
+        "bi-gear",
+      ];
+      const vibrantColors = [
+        "#ff4d4d",
+        "#4d79ff",
+        "#28a745",
+        "#ffc107",
+        "#ff66cc",
+        "#00cccc",
+        "#ff9933",
+        "#9966ff",
+        "#00b894",
+      ];
+
+      const chartGrid = document.getElementById("chartGrid");
+      const sidebar = document.getElementById("sidebarButtons");
+      const departmentSelect = document.getElementById("departmentSelect");
+      const targetDepartment = document.getElementById("targetDepartment");
+      const departmentStats = document.getElementById("departmentStats");
+      const homeArea = document.getElementById("homeArea");
+      const deptArea = document.getElementById("departmentArea");
+      const topBarTitle = document.getElementById("topBarTitle");
+      const targetSection = document.getElementById("targetSection");
+
+      const charts = {};
+      const departmentData = {};
+      const homeSelectedStats = {};
+      const targets = {};
+
+      departments.forEach((dept, i) => {
+        sidebarButtons.innerHTML += `<button class="btn tab-button ${
+          dept === "Home" ? "active" : ""
+        } mb-2" data-tab="${dept}"><i class="bi ${
+          icons[i]
+        } me-2"></i> <span class="tab-text">${dept}</span></button>`;
+        if (dept !== "Home") {
+          departmentSelect.innerHTML += `<option>${dept}</option>`;
+          targetDepartment.innerHTML += `<option>${dept}</option>`;
+          const col = document.createElement("div");
+          col.className = "col-6 col-md-3 position-relative";
+          col.innerHTML = `
+      <div class="chart-card">
+        <div class="fw-bold mb-1">${dept}</div>
+        <canvas id="chart-${dept}" width="150" height="150"></canvas>
+        <div class="chart-center-label" id="label-${dept}"></div>
+        <div class="chart-title" id="title-${dept}">Power generated</div>
+      </div>`;
+          chartGrid.appendChild(col);
+
+          charts[dept] = new Chart(
+            document.getElementById(`chart-${dept}`).getContext("2d"),
+            {
+              type: "doughnut",
+              data: {
+                labels: ["Current", "Remaining"],
+                datasets: [
+                  {
+                    data: [0, 1],
+                    backgroundColor: [vibrantColors[i], "#dee2e6"],
+                  },
+                ],
+              },
+              options: {
+                cutout: "70%",
+                plugins: { legend: { display: false } },
+              },
+            }
+          );
+
+          departmentData[dept] = [];
+          targets[dept] = [];
+          targets[dept].push({
+            title: "Meeting with Power Developer",
+            date: "2025-03-15",
+          });
+
+          const headcountTotal = getRandomInt(50, 500);
+          const headcountCurrent = getRandomInt(0, headcountTotal);
+          const milestonesTotal = getRandomInt(5, 20);
+          const milestonesCurrent = getRandomInt(0, milestonesTotal);
+
+          departmentData[dept].push({
+            name: "Headcount",
+            total: headcountTotal,
+            current: headcountCurrent,
+          });
+          departmentData[dept].push({
+            name: "Milestones Achieved",
+            total: milestonesTotal,
+            current: milestonesCurrent,
+          });
+
+          homeSelectedStats[dept] = 1;
+          updateHomeChart(dept);
+        }
+      });
+
+      document.querySelectorAll(".tab-button").forEach((btn) =>
+        btn.addEventListener("click", () => {
+          document
+            .querySelectorAll(".tab-button")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          const tab = btn.dataset.tab;
+          topBarTitle.textContent = `SECI Dashboard > ${tab}`;
+          if (tab === "Home") {
+            homeArea.classList.remove("d-none");
+            deptArea.classList.add("d-none");
+          } else {
+            homeArea.classList.add("d-none");
+            deptArea.classList.remove("d-none");
+            renderDepartmentStats(tab);
+          }
+        })
+      );
+
+      document.getElementById("statForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const dept = departmentSelect.value;
+        const name = document.getElementById("statName").value;
+        const total = parseInt(document.getElementById("totalInput").value);
+        const current = parseInt(document.getElementById("currentInput").value);
+        if (current > total) return alert("Current cannot exceed Total.");
+        departmentData[dept].push({ name, total, current });
+        if (homeSelectedStats[dept] === null)
+          homeSelectedStats[dept] = departmentData[dept].length - 1;
+        updateHomeChart(dept);
+        bootstrap.Modal.getInstance(
+          document.getElementById("statModal")
+        ).hide();
+        e.target.reset();
+      });
+
+      document.getElementById("targetForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const dept = targetDepartment.value;
+        const title = document.getElementById("targetTitle").value;
+        const date = document.getElementById("targetDate").value;
+        targets[dept].push({ title, date });
+        bootstrap.Modal.getInstance(
+          document.getElementById("targetModal")
+        ).hide();
+        e.target.reset();
+        if (topBarTitle.textContent.endsWith(dept)) renderDepartmentStats(dept);
+      });
+
+      function renderDepartmentStats(dept) {
+        departmentStats.innerHTML = "";
+        departmentStats.innerHTML =
+          "<h4 class='mb-3'>Department Statistics</h4>";
+        departmentData[dept].forEach((stat, index) => {
+          const colorIndex = departments.indexOf(dept);
+          const col = document.createElement("div");
+          col.className = "col-12 col-md-4 mx-auto mb-3";
+          col.innerHTML = `
+  <div class="chart-card ${
+    index === homeSelectedStats[dept] ? "selected-stat" : ""
+  }" onclick='selectForHome("${dept}", ${index}); renderDepartmentStats("${dept}");'>
+    <canvas id="dept-chart-${dept}-${index}" width="150" height="150"></canvas>
+    <div class="chart-center-label" id="dept-label-${dept}-${index}"></div>
+    <div class="chart-title">${stat.name}</div>
+  </div>
+`;
+          departmentStats.appendChild(col);
+
+          new Chart(
+            document
+              .getElementById(`dept-chart-${dept}-${index}`)
+              .getContext("2d"),
+            {
+              type: "doughnut",
+              data: {
+                labels: ["Current", "Remaining"],
+                datasets: [
+                  {
+                    data: [stat.current, stat.total - stat.current],
+                    backgroundColor: [vibrantColors[colorIndex], "#dee2e6"],
+                  },
+                ],
+              },
+              options: {
+                cutout: "70%",
+                plugins: { legend: { display: false } },
+              },
+            }
+          );
+
+          document.getElementById(
+            `dept-label-${dept}-${index}`
+          ).textContent = `${stat.current}/${stat.total}`;
+        });
+
+        targetSection.innerHTML = `<h4 class="mt-4 mb-2">Targets</h4>`;
+        if (targets[dept].length === 0) {
+          targetSection.innerHTML += `<p>No targets added.</p>`;
+        } else {
+          targets[dept].forEach((t) => {
+            const status = getTargetStatus(t.date);
+            targetSection.innerHTML += `
+        <div class="target-card">
+          <strong>${t.title}</strong><br>
+          Target Date: ${t.date}<br>
+          <span class="${status.class}">${status.text}</span>
+        </div>`;
+          });
+        }
+      }
+
+      function getTargetStatus(targetDate) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const target = new Date(targetDate);
+        target.setHours(0, 0, 0, 0);
+        const diffTime = target - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays < 0) {
+          return {
+            text: `Overdue by ${Math.abs(diffDays)} days`,
+            class: "overdue",
+          };
+        } else if (diffDays === 0) {
+          return { text: "Due Today", class: "upcoming" };
+        } else {
+          return { text: "Upcoming", class: "upcoming" };
+        }
+      }
+
+      function selectForHome(dept, index) {
+        homeSelectedStats[dept] = index;
+        updateHomeChart(dept);
+      }
+
+      function updateHomeChart(dept) {
+        const chart = charts[dept];
+        const stat = departmentData[dept][homeSelectedStats[dept]];
+        chart.data.datasets[0].data = [stat.current, stat.total - stat.current];
+        chart.update();
+        document.getElementById(
+          `label-${dept}`
+        ).textContent = `${stat.current}/${stat.total}`;
+        document.getElementById(`title-${dept}`).textContent = stat.name;
+      }
+
+      function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+      document.getElementById("collapseBtn").addEventListener("click", () => {
+        document.getElementById("sidebar").classList.toggle("collapsed");
+      });
+    </script>
+  </body>
+</html>
