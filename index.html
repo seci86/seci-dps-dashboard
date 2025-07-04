@@ -142,13 +142,13 @@
             >
               <i class="bi bi-plus-circle me-1"></i> Add Statistic
             </button>
-            <button
+            <!-- <button
               class="btn btn-primary btn-sm"
               data-bs-toggle="modal"
               data-bs-target="#targetModal"
             >
               <i class="bi bi-flag me-1"></i> Add Targets
-            </button>
+            </button> -->
           </div>
         </div>
         <div class="dashboard-area" id="homeArea">
@@ -165,7 +165,7 @@
 
             <!-- Right side: Editable Table -->
             <!-- Right side: Editable Table -->
-            <div id="taskTableArea" style="min-width: 300px; max-width: 400px">
+            <!-- <div id="taskTableArea" style="min-width: 300px; max-width: 400px">
               <h4 class="mb-2">Department Task Table</h4>
               <div id="tableContainer"></div>
               <button
@@ -174,7 +174,7 @@
               >
                 <i class="bi bi-pencil"></i> Edit Table
               </button>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -182,7 +182,7 @@
 
     <!-- Statistic Modal -->
     <div class="modal fade" id="statModal" tabindex="-1">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
           <form id="statForm">
             <div class="modal-header">
@@ -347,12 +347,12 @@
           const col = document.createElement("div");
           col.className = "col-6 col-md-3 position-relative";
           col.innerHTML = `
-            <div class="chart-card">
-              <div class="fw-bold mb-1">${dept}</div>
-              <canvas id="chart-${dept}" width="150" height="150"></canvas>
-              <div class="chart-center-label" id="label-${dept}"></div>
-              <div class="chart-title" id="title-${dept}">Power generated</div>
-            </div>`;
+                            <div class="chart-card">
+                              <div class="fw-bold mb-1">${dept}</div>
+                              <canvas id="chart-${dept}" width="150" height="150"></canvas>
+                              <div class="chart-center-label" id="label-${dept}"></div>
+                              <div class="chart-title" id="title-${dept}">Power generated</div>
+                            </div>`;
           chartGrid.appendChild(col);
 
           charts[dept] = new Chart(
@@ -370,7 +370,28 @@
               },
               options: {
                 cutout: "70%",
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      label: function (context) {
+                        const index = context.dataIndex;
+                        const label = context.chart.data.labels[index];
+                        const value =
+                          context.chart.data.datasets[0].data[index];
+                        const tooltipData =
+                          context.chart.data.datasets[0].tooltipData[index] ||
+                          [];
+
+                        const lines = [`${label}: ${value}`];
+                        tooltipData.forEach((item) => {
+                          lines.push(`${item.key}: ${item.value}`);
+                        });
+                        return lines;
+                      },
+                    },
+                  },
+                },
               },
             }
           );
@@ -390,8 +411,150 @@
           departmentData[dept].push({
             name: "Power Generated",
             fields: [
-              { label: "Solar", value: getRandomInt(10, 50) },
-              { label: "Wind", value: getRandomInt(10, 50) },
+              {
+                label: "Leh",
+                value: 25,
+                tooltipData: [
+                  { key: "Capacity", value: "25MW + 50MWh" },
+                  { key: "LOA Date", value: "20-11-2024" },
+                  { key: "SCOD/Duration", value: "36 months" },
+                  { key: "Extended COD", value: "-" },
+                  { key: "Land", value: "-" },
+                  { key: "% Physical Progress", value: "-" },
+                  { key: "% Financial Progress", value: "-" },
+                ],
+                tableData: [
+                  {
+                    issues:
+                      " Issue of civil drawings for MCR and MMS foundations",
+                    status: "Pending",
+                    dept: "Civil Engineering",
+                    date: "2025-07-20",
+                  },
+                ],
+              },
+              {
+                label: "Getalsud",
+                value: 100,
+                tooltipData: [
+                  { key: "Capacity", value: "100MW" },
+                  { key: "LOA Date", value: "07-05-2024" },
+                  { key: "SCOD/Duration", value: "07/12/2025, 18 months" },
+                  { key: "Extended COD", value: "28/02/2026" },
+                  { key: "Land", value: "Reservoir" },
+                  { key: "% Physical Progress", value: "-" },
+                  { key: "% Financial Progress", value: "-" },
+                ],
+                tableData: [
+                  {
+                    issues: "Transmission line approval",
+                    status: "Pending",
+                    dept: "Civil Engineering",
+                    date: "2025-07-20",
+                  },
+                ],
+              },
+              {
+                label: "Ramagiri",
+                value: 300,
+                tooltipData: [
+                  { key: "Capacity", value: "100MW" },
+                  { key: "LOA Date", value: "06-02-2024" },
+                  { key: "SCOD/Duration", value: "12 months" },
+                  { key: "Extended COD", value: "-" },
+                  { key: "Land", value: "1033 Acre" },
+                  { key: "% Physical Progress", value: "-" },
+                  { key: "% Financial Progress", value: "-" },
+                ],
+                tableData: [
+                  {
+                    issues: "Pile marking coordinate drawing is required",
+                    status: "Pending",
+                    dept: "Civil Engineering",
+                    date: "2025-07-20",
+                  },
+                  {
+                    issues: "ICR foundation drawings required",
+                    status: "In Progress",
+                    dept: "Design Team",
+                    date: "2025-07-25",
+                  },
+                  {
+                    issues: "Inverter transformer drawings",
+                    status: "Completed",
+                    dept: "Electrical Engineering",
+                    date: "2025-07-18",
+                  },
+                  {
+                    issues: "33kV switch gear foundation",
+                    status: "Pending",
+                    dept: "Electrical Engineering",
+                    date: "2025-07-28",
+                  },
+                  {
+                    issues:
+                      "String combiner box foundation and coordinates drawing required",
+                    status: "In Progress",
+                    dept: "Civil Engineering",
+                    date: "2025-07-22",
+                  },
+                  {
+                    issues:
+                      "Cable trench layout & Overhead transmission line layout",
+                    status: "Pending",
+                    dept: "Transmission",
+                    date: "2025-07-30",
+                  },
+                ],
+              },
+              {
+                label: "Dhar",
+                value: 100,
+                tooltipData: [
+                  { key: "Capacity", value: "100MW" },
+                  { key: "LOA Target", value: "-" },
+                ],
+                tableData: [
+                  {
+                    issues: "Bid Opening for Module",
+                    status: "Pending",
+                    dept: "Environment",
+                    date: "2025-07-10",
+                  },
+                ],
+              },
+              {
+                label: "Radhanesda",
+                value: 700,
+                tooltipData: [
+                  { key: "Capacity", value: "700MW" },
+                  { key: "LOA Target", value: "-" },
+                ],
+                tableData: [
+                  {
+                    issues: "Bid Opening for Module",
+                    status: "Pending",
+                    dept: "Environment",
+                    date: "2025-07-04",
+                  },
+                ],
+              },
+              {
+                label: "NDMC",
+                value: 300,
+                tooltipData: [
+                  { key: "Capacity", value: "300MW" },
+                  { key: "LOA Target", value: "2022" },
+                ],
+                tableData: [
+                  {
+                    issues: "Project registration completion",
+                    status: "Pending",
+                    dept: "Environment",
+                    date: "2025-07-10",
+                  },
+                ],
+              },
             ],
           });
           departmentTables[dept] = {
@@ -417,11 +580,11 @@
           if (tab === "Home") {
             homeArea.classList.remove("d-none");
             deptArea.classList.add("d-none");
-            document.getElementById("taskTableArea").style.display = "none";
+            // document.getElementById("taskTableArea").style.display = "none";
           } else {
             homeArea.classList.add("d-none");
             deptArea.classList.remove("d-none");
-            document.getElementById("taskTableArea").style.display = "block";
+            // document.getElementById("taskTableArea").style.display = "block";
             renderDepartmentStats(tab);
           }
         })
@@ -432,44 +595,159 @@
       function clearFieldsList() {
         document.getElementById("fieldsList").innerHTML = "";
       }
-      function addField(label = "", value = "") {
+      function addField(
+        label = "",
+        value = "",
+        tooltipData = [],
+        tableData = []
+      ) {
         const fieldsList = document.getElementById("fieldsList");
-        const idx = fieldsList.children.length;
+        const div = document.createElement("div");
+        div.className = "card mb-3 p-3";
+        div.innerHTML = `
+        <div class="mb-2">
+          <label>Label:</label>
+          <input type="text" class="form-control field-label" placeholder="Label" value="${label.replace(
+            /"/g,
+            "&quot;"
+          )}">
+        </div>
+        <div class="mb-2">
+          <label>Value:</label>
+          <input type="number" min="0" class="form-control field-value" placeholder="Value" value="${value}">
+        </div>
+
+        <div class="mb-2">
+          <label>Tooltip Data:</label>
+          <div class="tooltip-list mb-2"></div>
+          <button type="button" class="btn btn-sm btn-outline-primary add-tooltip-btn mb-2">Add Tooltip Item</button>
+        </div>
+
+        <div class="mb-2">
+          <label>Table Data:</label>
+          <div class="tabledata-list mb-2"></div>
+          <button type="button" class="btn btn-sm btn-outline-primary add-tabledata-btn mb-2">Add Table Row</button>
+        </div>
+
+        <button type="button" class="btn btn-outline-danger" onclick="this.parentNode.remove()">Remove Label</button>
+      `;
+        fieldsList.appendChild(div);
+
+        // Pre-fill Tooltip Data
+        const tooltipList = div.querySelector(".tooltip-list");
+        tooltipData.forEach((td) =>
+          addTooltipItem(tooltipList, td.key, td.value)
+        );
+
+        div.querySelector(".add-tooltip-btn").onclick = () =>
+          addTooltipItem(tooltipList);
+
+        // Pre-fill Table Data
+        const tableDataList = div.querySelector(".tabledata-list");
+        tableData.forEach((td) =>
+          addTableDataRow(tableDataList, td.issues, td.status, td.dept, td.date)
+        );
+
+        div.querySelector(".add-tabledata-btn").onclick = () =>
+          addTableDataRow(tableDataList);
+      }
+      function addTooltipItem(container, key = "", value = "") {
         const div = document.createElement("div");
         div.className = "input-group mb-2";
         div.innerHTML = `
-                <input type="text" class="form-control field-label" placeholder="Label" value="${label.replace(
-                  /"/g,
-                  "&quot;"
-                )}">
-                <input type="number" min="0" class="form-control field-value" placeholder="Value" value="${value}">
-                <button type="button" class="btn btn-outline-danger" onclick="this.parentNode.remove()">&#10006;</button>
-              `;
-        fieldsList.appendChild(div);
+        <input type="text" class="form-control tooltip-key" placeholder="Key" value="${key.replace(
+          /"/g,
+          "&quot;"
+        )}">
+        <input type="text" class="form-control tooltip-value" placeholder="Value" value="${value.replace(
+          /"/g,
+          "&quot;"
+        )}">
+        <button type="button" class="btn btn-outline-danger" onclick="this.parentNode.remove()">&#10006;</button>
+      `;
+        container.appendChild(div);
+      }
+
+      function addTableDataRow(
+        container,
+        issues = "",
+        status = "",
+        dept = "",
+        date = ""
+      ) {
+        const div = document.createElement("div");
+        div.className = "input-group mb-2";
+        div.innerHTML = `
+        <input type="text" class="form-control td-issues" placeholder="Issues" value="${issues.replace(
+          /"/g,
+          "&quot;"
+        )}">
+        <input type="text" class="form-control td-status" placeholder="Status" value="${status.replace(
+          /"/g,
+          "&quot;"
+        )}">
+        <input type="text" class="form-control td-dept" placeholder="Department" value="${dept.replace(
+          /"/g,
+          "&quot;"
+        )}">
+        <input type="text" class="form-control td-date" placeholder="Date" value="${date.replace(
+          /"/g,
+          "&quot;"
+        )}">
+        <button type="button" class="btn btn-outline-danger" onclick="this.parentNode.remove()">&#10006;</button>
+      `;
+        container.appendChild(div);
       }
       function getFieldsFromModal() {
         const fields = [];
-        document.querySelectorAll("#fieldsList .input-group").forEach((div) => {
+        document.querySelectorAll("#fieldsList .card").forEach((div) => {
           const label = div.querySelector(".field-label").value.trim();
           const value = parseInt(div.querySelector(".field-value").value);
-          if (label && !isNaN(value)) fields.push({ label, value });
+
+          const tooltipData = [];
+          div.querySelectorAll(".tooltip-list .input-group").forEach((tdiv) => {
+            const key = tdiv.querySelector(".tooltip-key").value.trim();
+            const val = tdiv.querySelector(".tooltip-value").value.trim();
+            if (key) tooltipData.push({ key, value: val });
+          });
+
+          const tableData = [];
+          div
+            .querySelectorAll(".tabledata-list .input-group")
+            .forEach((tdiv) => {
+              const issues = tdiv.querySelector(".td-issues").value.trim();
+              const status = tdiv.querySelector(".td-status").value.trim();
+              const dept = tdiv.querySelector(".td-dept").value.trim();
+              const date = tdiv.querySelector(".td-date").value.trim();
+              if (issues) tableData.push({ issues, status, dept, date });
+            });
+
+          if (label && !isNaN(value)) {
+            fields.push({ label, value, tooltipData, tableData });
+          }
         });
         return fields.length > 0 ? fields : null;
       }
       function setFieldsInModal(fields) {
         clearFieldsList();
         if (fields && Array.isArray(fields)) {
-          fields.forEach((f) => addField(f.label, f.value));
+          fields.forEach((f) =>
+            addField(
+              f.label,
+              f.value,
+              JSON.stringify(f.tooltipData || [], null, 2),
+              JSON.stringify(f.tableData || [], null, 2)
+            )
+          );
         }
       }
-      function resetStatModal() {
-        document.getElementById("statForm").reset();
+      function setFieldsInModal(fields) {
         clearFieldsList();
-        editingStat = null;
-        document.querySelector("#statModal .modal-title").textContent =
-          "Add Statistic";
-        document.getElementById("statSubmitBtn").textContent = "Add";
-        document.getElementById("departmentSelect").disabled = false;
+        if (fields && Array.isArray(fields)) {
+          fields.forEach((f) =>
+            addField(f.label, f.value, f.tooltipData || [], f.tableData || [])
+          );
+        }
       }
       document
         .getElementById("statModal")
@@ -537,13 +815,14 @@
       });
 
       function renderDepartmentStats(dept) {
+        document.getElementById("chartDetailsSection").innerHTML = "";
         departmentStats.innerHTML = "";
         departmentStats.innerHTML =
           "<h4 class='mb-3'>Department Headcount</h4>";
         departmentStats.innerHTML +=
-          '<div class="d-flex align-items-center"><div class="d-flex align-items-center me-4"><span class="mx-2">Total headcount:</span><span>55</span></div><div class="d-flex align-items-center me-4"><i class="bi bi-person-fill fs-4"></i><span class="mx-2">Regular:</span><span>30</span></div><div class="d-flex align-items-center me-4"><i class="bi bi-person-fill fs-4"></i><span class="mx-2">Contractual:</span><span>20</span></div><div class="d-flex align-items-center"><i class="bi bi-person-fill fs-4"></i><span class="mx-2">YP:</span><span>5</span></div></div>';
+          '<div class="d-flex align-items-center"><div class="d-flex align-items-center me-4"><span class="mx-2">Total headcount:</span><span>36</span></div><div class="d-flex align-items-center me-4"><i class="bi bi-person-fill fs-4"></i><span class="mx-2">Regular:</span><span>30</span></div><div class="d-flex align-items-center me-4"><i class="bi bi-person-fill fs-4"></i><span class="mx-2">Contractual:</span><span>5</span></div><div class="d-flex align-items-center"><i class="bi bi-person-fill fs-4"></i><span class="mx-2">YP:</span><span>1</span></div></div>';
         departmentStats.innerHTML +=
-          "<h4 class='mb-3'>Department Statistics</h4>";
+          "<h4 class='mb-3'>Key Issues / Targets</h4>";
         departmentData[dept].forEach((stat, index) => {
           const colorIndex = departments.indexOf(dept);
           const col = document.createElement("div");
@@ -560,95 +839,223 @@
             chartColors = chartLabels.map(
               (_, i) => vibrantColors[(colorIndex + i) % vibrantColors.length]
             );
+            // chartExtras = stat.fields.map((f) => f.extra || "");
+            chartColors = chartLabels.map(
+              (_, i) => vibrantColors[(colorIndex + i) % vibrantColors.length]
+            );
+            chartTooltipData = stat.fields.map((f) => f.tooltipData || []);
+            chartTableData = stat.fields.map((f) => f.tableData || []);
           } else {
             chartLabels = ["Current", "Remaining"];
             chartData = [stat.current, stat.total - stat.current];
             chartColors = [vibrantColors[colorIndex], "#dee2e6"];
           }
           col.innerHTML = `
-  <div class="chart-card ${
-    index === homeSelectedStats[dept] ? "selected-stat" : ""
-  }">
-    <canvas id="dept-chart-${dept}-${index}" width="150" height="150"></canvas>
-    <div class="chart-center-label" id="dept-label-${dept}-${index}"></div>
-    <div class="chart-title">${stat.name}</div>
-    <div class="d-flex justify-content-center gap-2 mt-3">
-      <button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); editStat('${dept}', ${index})"><i class="bi bi-pencil"></i> Edit</button>
-      <button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); selectForHome('${dept}', ${index});"><i class="bi bi-house"></i> Show on Home</button>
-      <button class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); deleteStat('${dept}', ${index})"><i class="bi bi-trash"></i> Delete</button>
-    </div>
-  </div>
-`;
+                  <div class="chart-card ${
+                    index === homeSelectedStats[dept] ? "selected-stat" : ""
+                  }">
+                    <canvas id="dept-chart-${dept}-${index}" width="150" height="150"></canvas>
+                    <div class="chart-center-label" id="dept-label-${dept}-${index}"></div>
+                    <div class="chart-title">${stat.name}</div>
+                    <div class="d-flex justify-content-center gap-2 mt-3">
+                      <button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); editStat('${dept}', ${index})"><i class="bi bi-pencil"></i> Edit</button>
+                      <button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); selectForHome('${dept}', ${index});"><i class="bi bi-house"></i> Show on Home</button>
+                      <button class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); deleteStat('${dept}', ${index})"><i class="bi bi-trash"></i> Delete</button>
+                    </div>
+                  </div>
+                `;
           departmentStats.appendChild(col);
           // Chart click to select for home
           col.querySelector("canvas").onclick = () => {
             renderDepartmentStats(dept);
             showChartDetails(dept, index);
           };
-          new Chart(
-            document
-              .getElementById(`dept-chart-${dept}-${index}`)
-              .getContext("2d"),
-            {
-              type: "doughnut",
-              data: {
-                labels: chartLabels,
-                datasets: [
-                  {
-                    data: chartData,
-                    backgroundColor: chartColors,
+          const ctx = document
+            .getElementById(`dept-chart-${dept}-${index}`)
+            .getContext("2d");
+          if (stat.fields && stat.fields.length > 0 && index === 0) {
+            const firstField = stat.fields[0];
+            showTableForLabel(
+              dept,
+              stat.name,
+              firstField.label,
+              firstField.extra || []
+            );
+          }
+
+          const chartInstance = new Chart(ctx, {
+            type: "doughnut",
+            data: {
+              labels: chartLabels,
+              datasets: [
+                {
+                  data: chartData,
+                  backgroundColor: chartColors,
+                  tooltipData: chartTooltipData,
+                  tableData: chartTableData,
+                },
+              ],
+            },
+            options: {
+              cutout: "70%",
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  callbacks: {
+                    label: function (context) {
+                      const index = context.dataIndex;
+                      const label = context.chart.data.labels[index];
+                      const value = context.chart.data.datasets[0].data[index];
+                      const tooltipDataArray =
+                        context.chart.data.datasets[0].tooltipData || [];
+                      const tooltipData = tooltipDataArray[index] || [];
+
+                      const lines = [`${label}: ${value}`];
+                      tooltipData.forEach((item) => {
+                        lines.push(`${item.key}: ${item.value}`);
+                      });
+                      return lines;
+                    },
                   },
-                ],
+                },
               },
-              options: {
-                cutout: "70%",
-                plugins: { legend: { display: false } },
-              },
-            }
-          );
+            },
+          });
+          document.getElementById(`dept-chart-${dept}-${index}`).onclick =
+            function (evt) {
+              const points = chartInstance.getElementsAtEventForMode(
+                evt,
+                "nearest",
+                { intersect: true },
+                true
+              );
+              if (points.length) {
+                const clickedIndex = points[0].index;
+                const clickedLabel = chartInstance.data.labels[clickedIndex];
+                const clickedTableData =
+                  chartInstance.data.datasets[0].tableData[clickedIndex] || [];
+
+                showTableForLabel(
+                  dept,
+                  stat.name,
+                  clickedLabel,
+                  clickedTableData
+                );
+                section.scrollIntoView({ behavior: "smooth", block: "start" });
+              }
+            };
           // Center label: total if fields, else current/total
           const total = stat.fields.reduce((sum, f) => sum + f.value, 0);
           document.getElementById(`dept-label-${dept}-${index}`).textContent =
             total;
         });
 
-        targetSection.innerHTML = `<h4 class="mt-4 mb-2">Department Targets</h4>`;
-        if (targets[dept].length === 0) {
-          targetSection.innerHTML += `<p>No targets added.</p>`;
-        } else {
-          let tableHTML = `
-    <table class="target-table">
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>Target Date</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-  `;
+        // targetSection.innerHTML = `<h4 class="mt-4 mb-2">Department Targets</h4>`;
+        // if (targets[dept].length === 0) {
+        //   targetSection.innerHTML += `<p>No targets added.</p>`;
+        // } else {
+        //   let tableHTML = `
+        //   <table class="target-table">
+        //     <thead>
+        //       <tr>
+        //         <th>Title</th>
+        //         <th>Target Date</th>
+        //         <th>Status</th>
+        //       </tr>
+        //     </thead>
+        //     <tbody>
+        // `;
 
-          targets[dept].forEach((t) => {
-            const status = getTargetStatus(t.date);
-            tableHTML += ` 
-      <tr>
-        <td>${t.title}</td>
-        <td>${t.date}</td>
-        <td><span class="${status.class}">${status.text}</span></td>
-      </tr>
-    `;
-          });
+        //   targets[dept].forEach((t) => {
+        //     const status = getTargetStatus(t.date);
+        //     tableHTML += `
+        //     <tr>
+        //       <td>${t.title}</td>
+        //       <td>${t.date}</td>
+        //       <td><span class="${status.class}">${status.text}</span></td>
+        //     </tr>
+        //   `;
+        //   });
 
-          tableHTML += `
-      </tbody>
-    </table>
-  `;
+        //   tableHTML += `
+        //     </tbody>
+        //   </table>
+        // `;
 
-          targetSection.innerHTML += tableHTML;
-        }
+        //   targetSection.innerHTML += tableHTML;
+        // }
 
         renderDepartmentTable(dept);
-        document.getElementById("editTableBtn").onclick = () => editTable(dept);
+        // document.getElementById("editTableBtn").onclick = () => editTable(dept);
+      }
+
+      function showTableForLabel(dept, statName, label, tableData) {
+        const section = document.getElementById("chartDetailsSection");
+
+        const stat = departmentData[dept].find((s) => s.name === statName);
+        if (!stat || !stat.fields) return;
+
+        let html = `
+        <h5>${dept} - ${statName} Details - ${label}</h5>
+        <div class="mb-3">
+          <label class="form-label">Select Label:</label>
+          <select class="form-select mb-3" id="labelDropdown">
+      `;
+
+        stat.fields.forEach((f) => {
+          html += `<option ${f.label === label ? "selected" : ""}>${
+            f.label
+          }</option>`;
+        });
+
+        html += `</select>`;
+
+        html += `
+        <table class="target-table mb-3">
+          <thead>
+            <tr>
+              <th>SN</th>
+              <th>Issues</th>
+              <th>Present status</th>
+              <th>Concerned Dept</th>
+              <th>Target date/ Requirement date</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+        tableData.forEach((item, i) => {
+          html += `
+          <tr>
+            <td>${i + 1}</td>
+            <td>${item.issues || ""}</td>
+            <td>${item.status || ""}</td>
+            <td>${item.dept || ""}</td>
+            <td>${item.date || ""}</td>
+          </tr>
+        `;
+        });
+
+        html += `</tbody></table></div>`;
+
+        section.innerHTML = html;
+
+        document
+          .getElementById("labelDropdown")
+          .addEventListener("change", function () {
+            const selectedLabel = this.value;
+            const selectedField = stat.fields.find(
+              (f) => f.label === selectedLabel
+            );
+            showTableForLabel(
+              dept,
+              statName,
+              selectedLabel,
+              selectedField.tableData || []
+            );
+          });
+
+        section.scrollIntoView({ behavior: "smooth", block: "start" });
       }
       function renderDepartmentTable(dept) {
         const tableData = departmentTables[dept];
@@ -668,7 +1075,7 @@
         });
         html += `</tbody></table>`;
 
-        document.getElementById("tableContainer").innerHTML = html;
+        // document.getElementById("tableContainer").innerHTML = html;
       }
 
       function editTable(dept) {
@@ -697,13 +1104,13 @@
         const detailsSection = document.getElementById("chartDetailsSection");
 
         let html = `
-          <h4>Details for: ${stat.name}</h4>
-          <ul class="list-group mb-3">
-            <li class="list-group-item"><strong>Total:</strong> ${stat.fields.reduce(
-              (sum, f) => sum + f.value,
-              0
-            )}</li>
-          `;
+                          <h4>Details for: ${stat.name}</h4>
+                          <ul class="list-group mb-3">
+                            <li class="list-group-item"><strong>Total:</strong> ${stat.fields.reduce(
+                              (sum, f) => sum + f.value,
+                              0
+                            )}</li>
+                          `;
 
         if (stat.fields && stat.fields.length > 0) {
           html += `<li class="list-group-item"><strong>Breakdown:</strong><ul>`;
@@ -755,6 +1162,7 @@
         if (!stat || !stat.fields) return;
 
         chart.data.labels = stat.fields.map((f) => f.label);
+        chart.data.datasets[0].extras = stat.fields.map((f) => f.extra || []);
         chart.data.datasets[0].data = stat.fields.map((f) => f.value);
         chart.data.datasets[0].backgroundColor = stat.fields.map(
           (_, i) =>
