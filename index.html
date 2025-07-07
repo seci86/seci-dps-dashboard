@@ -427,6 +427,10 @@
                             </div>`;
           }
 
+          col.querySelector(".chart-card").addEventListener("click", () => {
+            goToDepartmentTab(dept);
+          });
+
           chartGrid.appendChild(col);
 
           charts[dept] = new Chart(
@@ -1342,6 +1346,13 @@
         // document.getElementById("editTableBtn").onclick = () => editTable(dept);
       }
 
+      function goToDepartmentTab(departmentName) {
+        document.querySelectorAll(".tab-button").forEach((tab) => {
+          if (tab.dataset.tab === departmentName) {
+            tab.click();
+          }
+        });
+      }
       function showTableForLabel(dept, statName, label, tableData) {
         const section = document.getElementById("chartDetailsSection");
 
