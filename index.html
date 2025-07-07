@@ -484,7 +484,7 @@
           const milestonesCurrent = getRandomInt(0, milestonesTotal);
           if (dept === "QA") {
             departmentData[dept].push({
-              name: "Projects",
+              name: "Documents/PDI",
               fields: [
                 {
                   label: "Dhar Module",
@@ -522,7 +522,7 @@
             });
           } else if (dept === "RESCO") {
             departmentData[dept].push({
-              name: "Projects",
+              name: "Schemes",
               fields: [
                 {
                   label: "Dhar Module",
@@ -541,20 +541,25 @@
             });
           } else if (dept === "Energy Mangement") {
             departmentData[dept].push({
-              name: "PPA",
+              name: "PPA (MW)",
               fields: [
                 {
-                  label: "Dhar Module",
-                  value: 200,
-                  tooltipData: [{ key: "Capacity", value: "200MW" }],
-                  tableData: [
-                    {
-                      issues: "e-RA",
-                      status: "Pending",
-                      dept: "Civil Engineering",
-                      date: "2025-07-10",
-                    },
-                  ],
+                  label: "Solar",
+                  value: 100,
+                  tooltipData: [{ key: "Capacity", value: "100MW" }],
+                  tableData: [],
+                },
+                {
+                  label: "Wind",
+                  value: 100,
+                  tooltipData: [{ key: "Capacity", value: "100MW" }],
+                  tableData: [],
+                },
+                {
+                  label: "Hybrid",
+                  value: 100,
+                  tooltipData: [{ key: "Capacity", value: "100MW" }],
+                  tableData: [],
                 },
               ],
             });
@@ -579,7 +584,7 @@
             });
           } else if (dept === "O&M") {
             departmentData[dept].push({
-              name: "Commissioned Projects",
+              name: "Commissioned Projects (MW)",
               fields: [
                 {
                   label: "Rajnandgaon, Chattisgarh",
@@ -721,7 +726,7 @@
             });
           } else {
             departmentData[dept].push({
-              name: "Capex Projects",
+              name: "Capex Projects (MW)",
               fields: [
                 {
                   label: "Leh",
@@ -729,7 +734,7 @@
                   tooltipData: [
                     { key: "Capacity", value: "25MW + 50MWh" },
                     { key: "LOA Date", value: "20-11-2024" },
-                    { key: "SCOD/Duration", value: "36 months" },
+                    { key: "SCOD/Duration", value: "19-11-2024/36 months" },
                     { key: "Extended COD", value: "-" },
                     { key: "Land", value: "-" },
                     { key: "% Physical Progress", value: "-" },
@@ -737,11 +742,10 @@
                   ],
                   tableData: [
                     {
-                      issues:
-                        " Issue of civil drawings for MCR and MMS foundations",
-                      status: "Pending",
-                      dept: "Civil Engineering",
-                      date: "2025-07-20",
+                      issues: "DCR  cell and modules as per RfS mandate",
+                      status: "Under deliberation at EPC's end",
+                      dept: "Projects/C&P",
+                      date: "2025-07-31",
                     },
                   ],
                 },
