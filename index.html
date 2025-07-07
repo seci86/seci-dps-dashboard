@@ -121,9 +121,54 @@
       .target-table th {
         background-color: #f2f2f2;
       }
+      #splashScreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column; /* Ensures vertical stacking */
+        z-index: 9999;
+      }
+
+      .splash-text {
+        font-size: 50px;
+        font-weight: bold;
+        color: #333;
+        opacity: 0;
+        transform: scale(0.8);
+        animation: splashFadeIn 1s ease forwards;
+      }
+
+      @keyframes splashFadeIn {
+        0% {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        60% {
+          opacity: 1;
+          transform: scale(1.05);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
     </style>
   </head>
   <body>
+    <div id="splashScreen">
+      <img
+        src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg.saurenergy.com%2F2017%2F02%2FSECI.jpg&f=1&nofb=1&ipt=194f07caac58e8c968f6992dfe4cc86495a7bbdbd9a0b41825c8c6180b5c2f10"
+        alt="SECI Logo"
+        width="200"
+      />
+      <br />
+    </div>
     <div class="d-flex">
       <div class="tab-sidebar d-flex flex-column p-2 bg-light" id="sidebar">
         <button class="btn btn-secondary btn-sm collapse-btn" id="collapseBtn">
@@ -285,6 +330,15 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+      window.addEventListener("load", function () {
+        setTimeout(() => {
+          const splash = document.getElementById("splashScreen");
+          splash.style.transition = "opacity 0.5s";
+          splash.style.opacity = 0;
+          setTimeout(() => (splash.style.display = "none"), 500);
+        }, 1500); // Total splash duration (adjust as needed)
+      });
+
       const departments = [
         "Home",
         "Business Development",
@@ -346,13 +400,33 @@
           targetDepartment.innerHTML += `<option>${dept}</option>`;
           const col = document.createElement("div");
           col.className = "col-6 col-md-3 position-relative";
-          col.innerHTML = `
+          if (dept === "Contracts & Procurement") {
+            // alert("hello");
+            col.innerHTML = `
+                            <div class="chart-card">
+                              <div class="fw-bold mb-1">${dept}</div>
+                              <canvas id="chart-${dept}" width="150" height="150"></canvas>
+                              <div class="chart-center-label" id="label-${dept}"></div>
+                              <div class="chart-title" id="title-${dept}">Tenders</div>
+                            </div>`;
+          } else if (dept === "O&M") {
+            col.innerHTML = `
+                            <div class="chart-card">
+                              <div class="fw-bold mb-1">${dept}</div>
+                              <canvas id="chart-${dept}" width="150" height="150"></canvas>
+                              <div class="chart-center-label" id="label-${dept}"></div>
+                              <div class="chart-title" id="title-${dept}">Commissioned Projects</div>
+                            </div>`;
+          } else {
+            col.innerHTML = `
                             <div class="chart-card">
                               <div class="fw-bold mb-1">${dept}</div>
                               <canvas id="chart-${dept}" width="150" height="150"></canvas>
                               <div class="chart-center-label" id="label-${dept}"></div>
                               <div class="chart-title" id="title-${dept}">Capex Projects</div>
                             </div>`;
+          }
+
           chartGrid.appendChild(col);
 
           charts[dept] = new Chart(
@@ -384,6 +458,7 @@
                           [];
 
                         const lines = [`${label}: ${value}`];
+                        console.log(tooltipData);
                         tooltipData.forEach((item) => {
                           lines.push(`${item.key}: ${item.value}`);
                         });
@@ -407,156 +482,395 @@
           const headcountCurrent = getRandomInt(0, headcountTotal);
           const milestonesTotal = getRandomInt(5, 20);
           const milestonesCurrent = getRandomInt(0, milestonesTotal);
+          if (dept === "QA") {
+            departmentData[dept].push({
+              name: "Projects",
+              fields: [
+                {
+                  label: "Dhar Module",
+                  value: 200,
+                  tooltipData: [{ key: "Capacity", value: "200MW" }],
+                  tableData: [
+                    {
+                      issues: "e-RA",
+                      status: "Pending",
+                      dept: "Civil Engineering",
+                      date: "2025-07-10",
+                    },
+                  ],
+                },
+              ],
+            });
+          } else if (dept === "Engineering") {
+            departmentData[dept].push({
+              name: "Drawings",
+              fields: [
+                {
+                  label: "Dhar Module",
+                  value: 200,
+                  tooltipData: [{ key: "Capacity", value: "200MW" }],
+                  tableData: [
+                    {
+                      issues: "e-RA",
+                      status: "Pending",
+                      dept: "Civil Engineering",
+                      date: "2025-07-10",
+                    },
+                  ],
+                },
+              ],
+            });
+          } else if (dept === "RESCO") {
+            departmentData[dept].push({
+              name: "Projects",
+              fields: [
+                {
+                  label: "Dhar Module",
+                  value: 200,
+                  tooltipData: [{ key: "Capacity", value: "200MW" }],
+                  tableData: [
+                    {
+                      issues: "e-RA",
+                      status: "Pending",
+                      dept: "Civil Engineering",
+                      date: "2025-07-10",
+                    },
+                  ],
+                },
+              ],
+            });
+          } else if (dept === "Energy Mangement") {
+            departmentData[dept].push({
+              name: "PPA",
+              fields: [
+                {
+                  label: "Dhar Module",
+                  value: 200,
+                  tooltipData: [{ key: "Capacity", value: "200MW" }],
+                  tableData: [
+                    {
+                      issues: "e-RA",
+                      status: "Pending",
+                      dept: "Civil Engineering",
+                      date: "2025-07-10",
+                    },
+                  ],
+                },
+              ],
+            });
+          } else if (dept === "Business Development") {
+            departmentData[dept].push({
+              name: "Proposals",
+              fields: [
+                {
+                  label: "Dhar Module",
+                  value: 200,
+                  tooltipData: [{ key: "Capacity", value: "200MW" }],
+                  tableData: [
+                    {
+                      issues: "e-RA",
+                      status: "Pending",
+                      dept: "Civil Engineering",
+                      date: "2025-07-10",
+                    },
+                  ],
+                },
+              ],
+            });
+          } else if (dept === "O&M") {
+            departmentData[dept].push({
+              name: "Commissioned Projects",
+              fields: [
+                {
+                  label: "Rajnandgaon, Chattisgarh",
+                  value: 100,
+                  tooltipData: [
+                    {
+                      key: "Capacity",
+                      value: "100MW Solar + 40MW/120MWh BESS",
+                    },
+                  ],
+                  tableData: [
+                    {
+                      issues: "Poor CUF",
+                      status: "Pending",
+                      dept: "O&M",
+                      date: "2025-07-31",
+                    },
+                  ],
+                },
+                {
+                  label: "Lakshadweep Islands",
+                  value: 1.7,
+                  tooltipData: [
+                    { key: "Capacity", value: "1.7MW Solar + 1.4MWh BESS" },
+                  ],
+                  tableData: [
+                    {
+                      issues: "Technical Bid Opening",
+                      status: "Pending",
+                      dept: "C&P",
+                      date: "2025-07-10",
+                    },
+                  ],
+                },
+                {
+                  label: "DRDO, Kolar",
+                  value: 10,
+                  tooltipData: [{ key: "Capacity", value: "10MW" }],
+                  tableData: [
+                    {
+                      issues: "e-RA Module",
+                      status: "Pending",
+                      dept: "C&P",
+                      date: "2025-07-07",
+                    },
+                  ],
+                },
+                {
+                  label: "Badi Sid, Rajasthan",
+                  value: 10,
+                  tooltipData: [{ key: "Capacity", value: "10MW" }],
+                  tableData: [
+                    {
+                      issues: "NIT",
+                      status: "Pending",
+                      dept: "C&P",
+                      date: "2025-07-18",
+                    },
+                  ],
+                },
+                {
+                  label: "A&N Islands RTS",
+                  value: 1,
+                  tooltipData: [{ key: "Capacity", value: "1MW" }],
+                  tableData: [
+                    {
+                      issues: "NIT",
+                      status: "Pending",
+                      dept: "C&P",
+                      date: "2025-07-18",
+                    },
+                  ],
+                },
+              ],
+            });
+          } else if (dept === "Contracts & Procurement") {
+            departmentData[dept].push({
+              name: "Tenders",
+              fields: [
+                {
+                  label: "Dhar Module",
+                  value: 200,
+                  tooltipData: [{ key: "Capacity", value: "200MW" }],
+                  tableData: [
+                    {
+                      issues: "e-RA",
+                      status: "Pending",
+                      dept: "Civil Engineering",
+                      date: "2025-07-10",
+                    },
+                  ],
+                },
+                {
+                  label: "Dhar BoS",
+                  value: 200,
+                  tooltipData: [{ key: "Capacity", value: "200MW" }],
+                  tableData: [
+                    {
+                      issues: "Technical Bid Opening",
+                      status: "Pending",
+                      dept: "C&P",
+                      date: "2025-07-10",
+                    },
+                  ],
+                },
+                {
+                  label: "Radhanesda Module",
+                  value: 700,
+                  tooltipData: [{ key: "Capacity", value: "700MW" }],
+                  tableData: [
+                    {
+                      issues: "e-RA Module",
+                      status: "Pending",
+                      dept: "C&P",
+                      date: "2025-07-07",
+                    },
+                    {
+                      issues: "NIT",
+                      status: "Pending",
+                      dept: "C&P",
+                      date: "2025-07-10",
+                    },
+                  ],
+                },
+                {
+                  label: "Radhanesda BoS",
+                  value: 700,
+                  tooltipData: [{ key: "Capacity", value: "700MW" }],
+                  tableData: [
+                    {
+                      issues: "NIT",
+                      status: "Pending",
+                      dept: "C&P",
+                      date: "2025-07-18",
+                    },
+                  ],
+                },
+              ],
+            });
+          } else {
+            departmentData[dept].push({
+              name: "Capex Projects",
+              fields: [
+                {
+                  label: "Leh",
+                  value: 25,
+                  tooltipData: [
+                    { key: "Capacity", value: "25MW + 50MWh" },
+                    { key: "LOA Date", value: "20-11-2024" },
+                    { key: "SCOD/Duration", value: "36 months" },
+                    { key: "Extended COD", value: "-" },
+                    { key: "Land", value: "-" },
+                    { key: "% Physical Progress", value: "-" },
+                    { key: "% Financial Progress", value: "-" },
+                  ],
+                  tableData: [
+                    {
+                      issues:
+                        " Issue of civil drawings for MCR and MMS foundations",
+                      status: "Pending",
+                      dept: "Civil Engineering",
+                      date: "2025-07-20",
+                    },
+                  ],
+                },
+                {
+                  label: "Getalsud",
+                  value: 100,
+                  tooltipData: [
+                    { key: "Capacity", value: "100MW" },
+                    { key: "LOA Date", value: "07-05-2024" },
+                    { key: "SCOD/Duration", value: "07/12/2025, 18 months" },
+                    { key: "Extended COD", value: "28/02/2026" },
+                    { key: "Land", value: "Reservoir" },
+                    { key: "% Physical Progress", value: "-" },
+                    { key: "% Financial Progress", value: "-" },
+                  ],
+                  tableData: [
+                    {
+                      issues: "Transmission line approval",
+                      status: "Pending",
+                      dept: "Civil Engineering",
+                      date: "2025-07-20",
+                    },
+                  ],
+                },
+                {
+                  label: "Ramagiri",
+                  value: 300,
+                  tooltipData: [
+                    { key: "Capacity", value: "300MW" },
+                    { key: "LOA Date", value: "06-02-2024" },
+                    { key: "SCOD/Duration", value: "12 months" },
+                    { key: "Extended COD", value: "-" },
+                    { key: "Land", value: "1033 Acre" },
+                    { key: "% Physical Progress", value: "-" },
+                    { key: "% Financial Progress", value: "-" },
+                  ],
+                  tableData: [
+                    {
+                      issues: "Pile marking coordinate drawing is required",
+                      status: "Pending",
+                      dept: "Civil Engineering",
+                      date: "2025-07-20",
+                    },
+                    {
+                      issues: "ICR foundation drawings required",
+                      status: "In Progress",
+                      dept: "Design Team",
+                      date: "2025-07-25",
+                    },
+                    {
+                      issues: "Inverter transformer drawings",
+                      status: "Completed",
+                      dept: "Electrical Engineering",
+                      date: "2025-07-18",
+                    },
+                    {
+                      issues: "33kV switch gear foundation",
+                      status: "Pending",
+                      dept: "Electrical Engineering",
+                      date: "2025-07-28",
+                    },
+                    {
+                      issues:
+                        "String combiner box foundation and coordinates drawing required",
+                      status: "In Progress",
+                      dept: "Civil Engineering",
+                      date: "2025-07-22",
+                    },
+                    {
+                      issues:
+                        "Cable trench layout & Overhead transmission line layout",
+                      status: "Pending",
+                      dept: "Transmission",
+                      date: "2025-07-30",
+                    },
+                  ],
+                },
+                {
+                  label: "Dhar",
+                  value: 100,
+                  tooltipData: [
+                    { key: "Capacity", value: "100MW" },
+                    { key: "LOA Target", value: "-" },
+                  ],
+                  tableData: [
+                    {
+                      issues: "Bid Opening for Module",
+                      status: "Pending",
+                      dept: "Environment",
+                      date: "2025-07-10",
+                    },
+                  ],
+                },
+                {
+                  label: "Radhanesda",
+                  value: 700,
+                  tooltipData: [
+                    { key: "Capacity", value: "700MW" },
+                    { key: "LOA Target", value: "-" },
+                  ],
+                  tableData: [
+                    {
+                      issues: "Bid Opening for Module",
+                      status: "Pending",
+                      dept: "Environment",
+                      date: "2025-07-04",
+                    },
+                  ],
+                },
+                {
+                  label: "NDMC",
+                  value: 300,
+                  tooltipData: [
+                    { key: "Capacity", value: "300MW" },
+                    { key: "LOA Target", value: "2022" },
+                  ],
+                  tableData: [
+                    {
+                      issues: "Project registration completion",
+                      status: "Pending",
+                      dept: "Environment",
+                      date: "2025-07-10",
+                    },
+                  ],
+                },
+              ],
+            });
+          }
 
-          departmentData[dept].push({
-            name: "Capex Projects",
-            fields: [
-              {
-                label: "Leh",
-                value: 25,
-                tooltipData: [
-                  { key: "Capacity", value: "25MW + 50MWh" },
-                  { key: "LOA Date", value: "20-11-2024" },
-                  { key: "SCOD/Duration", value: "36 months" },
-                  { key: "Extended COD", value: "-" },
-                  { key: "Land", value: "-" },
-                  { key: "% Physical Progress", value: "-" },
-                  { key: "% Financial Progress", value: "-" },
-                ],
-                tableData: [
-                  {
-                    issues:
-                      " Issue of civil drawings for MCR and MMS foundations",
-                    status: "Pending",
-                    dept: "Civil Engineering",
-                    date: "2025-07-20",
-                  },
-                ],
-              },
-              {
-                label: "Getalsud",
-                value: 100,
-                tooltipData: [
-                  { key: "Capacity", value: "100MW" },
-                  { key: "LOA Date", value: "07-05-2024" },
-                  { key: "SCOD/Duration", value: "07/12/2025, 18 months" },
-                  { key: "Extended COD", value: "28/02/2026" },
-                  { key: "Land", value: "Reservoir" },
-                  { key: "% Physical Progress", value: "-" },
-                  { key: "% Financial Progress", value: "-" },
-                ],
-                tableData: [
-                  {
-                    issues: "Transmission line approval",
-                    status: "Pending",
-                    dept: "Civil Engineering",
-                    date: "2025-07-20",
-                  },
-                ],
-              },
-              {
-                label: "Ramagiri",
-                value: 300,
-                tooltipData: [
-                  { key: "Capacity", value: "300MW" },
-                  { key: "LOA Date", value: "06-02-2024" },
-                  { key: "SCOD/Duration", value: "12 months" },
-                  { key: "Extended COD", value: "-" },
-                  { key: "Land", value: "1033 Acre" },
-                  { key: "% Physical Progress", value: "-" },
-                  { key: "% Financial Progress", value: "-" },
-                ],
-                tableData: [
-                  {
-                    issues: "Pile marking coordinate drawing is required",
-                    status: "Pending",
-                    dept: "Civil Engineering",
-                    date: "2025-07-20",
-                  },
-                  {
-                    issues: "ICR foundation drawings required",
-                    status: "In Progress",
-                    dept: "Design Team",
-                    date: "2025-07-25",
-                  },
-                  {
-                    issues: "Inverter transformer drawings",
-                    status: "Completed",
-                    dept: "Electrical Engineering",
-                    date: "2025-07-18",
-                  },
-                  {
-                    issues: "33kV switch gear foundation",
-                    status: "Pending",
-                    dept: "Electrical Engineering",
-                    date: "2025-07-28",
-                  },
-                  {
-                    issues:
-                      "String combiner box foundation and coordinates drawing required",
-                    status: "In Progress",
-                    dept: "Civil Engineering",
-                    date: "2025-07-22",
-                  },
-                  {
-                    issues:
-                      "Cable trench layout & Overhead transmission line layout",
-                    status: "Pending",
-                    dept: "Transmission",
-                    date: "2025-07-30",
-                  },
-                ],
-              },
-              {
-                label: "Dhar",
-                value: 100,
-                tooltipData: [
-                  { key: "Capacity", value: "100MW" },
-                  { key: "LOA Target", value: "-" },
-                ],
-                tableData: [
-                  {
-                    issues: "Bid Opening for Module",
-                    status: "Pending",
-                    dept: "Environment",
-                    date: "2025-07-10",
-                  },
-                ],
-              },
-              {
-                label: "Radhanesda",
-                value: 700,
-                tooltipData: [
-                  { key: "Capacity", value: "700MW" },
-                  { key: "LOA Target", value: "-" },
-                ],
-                tableData: [
-                  {
-                    issues: "Bid Opening for Module",
-                    status: "Pending",
-                    dept: "Environment",
-                    date: "2025-07-04",
-                  },
-                ],
-              },
-              {
-                label: "NDMC",
-                value: 300,
-                tooltipData: [
-                  { key: "Capacity", value: "300MW" },
-                  { key: "LOA Target", value: "2022" },
-                ],
-                tableData: [
-                  {
-                    issues: "Project registration completion",
-                    status: "Pending",
-                    dept: "Environment",
-                    date: "2025-07-10",
-                  },
-                ],
-              },
-            ],
-          });
           departmentTables[dept] = {
             columns: ["Task", "Status"],
             rows: [
@@ -749,6 +1063,16 @@
           );
         }
       }
+
+      function resetStatModal() {
+        document.getElementById("statForm").reset();
+        clearFieldsList();
+        document.getElementById("departmentSelect").disabled = false;
+        document.querySelector("#statModal .modal-title").textContent =
+          "Add Statistic";
+        document.getElementById("statSubmitBtn").textContent = "Add";
+        editingStat = null;
+      }
       document
         .getElementById("statModal")
         .addEventListener("hidden.bs.modal", resetStatModal);
@@ -910,7 +1234,7 @@
                         context.chart.data.datasets[0].tooltipData || [];
                       const tooltipData = tooltipDataArray[index] || [];
 
-                      const lines = [`${label}: ${value}`];
+                      const lines = [];
                       tooltipData.forEach((item) => {
                         lines.push(`${item.key}: ${item.value}`);
                       });
@@ -944,8 +1268,13 @@
                 section.scrollIntoView({ behavior: "smooth", block: "start" });
               }
             };
+
           // Center label: total if fields, else current/total
-          const total = stat.fields.reduce((sum, f) => sum + f.value, 0);
+          let total = stat.fields.reduce((sum, f) => sum + f.value, 0);
+
+          if (dept === "Contracts & Procurement") {
+            total /= 2;
+          }
           document.getElementById(`dept-label-${dept}-${index}`).textContent =
             total;
         });
@@ -1055,7 +1384,7 @@
             );
           });
 
-        section.scrollIntoView({ behavior: "smooth", block: "start" });
+        // section.scrollIntoView({ behavior: "smooth", block: "start" });
       }
       function renderDepartmentTable(dept) {
         const tableData = departmentTables[dept];
@@ -1171,7 +1500,10 @@
             ]
         );
 
-        const total = stat.fields.reduce((sum, f) => sum + f.value, 0);
+        let total = stat.fields.reduce((sum, f) => sum + f.value, 0);
+        if (dept === "Contracts & Procurement") {
+          total /= 2; // Special case for Contracts & Procurement
+        }
         document.getElementById(`label-${dept}`).textContent = total;
         document.getElementById(`title-${dept}`).textContent = stat.name;
         chart.update();
