@@ -179,7 +179,7 @@
       <div class="tab-content-area d-flex flex-column w-100">
         <div class="top-bar">
           <span id="topBarTitle">SECI Dashboard > Home</span>
-          <div class="d-flex gap-2 mt-2 mt-md-0">
+          <div class="d-flex gap-3 mt-2 mt-md-0">
             <button
               class="btn btn-success btn-sm"
               data-bs-toggle="modal"
@@ -187,13 +187,7 @@
             >
               <i class="bi bi-plus-circle me-1"></i> Add Statistic
             </button>
-            <!-- <button
-              class="btn btn-primary btn-sm"
-              data-bs-toggle="modal"
-              data-bs-target="#targetModal"
-            >
-              <i class="bi bi-flag me-1"></i> Add Targets
-            </button> -->
+            <span id="userName" class="fw-bold">Welcome, User</span>
           </div>
         </div>
         <div class="dashboard-area" id="homeArea">
@@ -342,12 +336,12 @@
       const departments = [
         "Home",
         "Business Development",
+        "PMC",
         "Contracts & Procurement",
         "Energy Mangement",
         "Projects",
         "RESCO",
-        "Engineering",
-        "QA",
+        "Engineering/QA",
         "O&M",
       ];
       const icons = [
@@ -403,28 +397,28 @@
           if (dept === "Contracts & Procurement") {
             // alert("hello");
             col.innerHTML = `
-                            <div class="chart-card">
-                              <div class="fw-bold mb-1">${dept}</div>
-                              <canvas id="chart-${dept}" width="150" height="150"></canvas>
-                              <div class="chart-center-label" id="label-${dept}"></div>
-                              <div class="chart-title" id="title-${dept}">Tenders</div>
-                            </div>`;
+                                  <div class="chart-card">
+                                    <div class="fw-bold mb-1">${dept}</div>
+                                    <canvas id="chart-${dept}" width="150" height="150"></canvas>
+                                    <div class="chart-center-label" id="label-${dept}"></div>
+                                    <div class="chart-title" id="title-${dept}">Tenders</div>
+                                  </div>`;
           } else if (dept === "O&M") {
             col.innerHTML = `
-                            <div class="chart-card">
-                              <div class="fw-bold mb-1">${dept}</div>
-                              <canvas id="chart-${dept}" width="150" height="150"></canvas>
-                              <div class="chart-center-label" id="label-${dept}"></div>
-                              <div class="chart-title" id="title-${dept}">Commissioned Projects</div>
-                            </div>`;
+                                  <div class="chart-card">
+                                    <div class="fw-bold mb-1">${dept}</div>
+                                    <canvas id="chart-${dept}" width="150" height="150"></canvas>
+                                    <div class="chart-center-label" id="label-${dept}"></div>
+                                    <div class="chart-title" id="title-${dept}">Commissioned Projects</div>
+                                  </div>`;
           } else {
             col.innerHTML = `
-                            <div class="chart-card">
-                              <div class="fw-bold mb-1">${dept}</div>
-                              <canvas id="chart-${dept}" width="150" height="150"></canvas>
-                              <div class="chart-center-label" id="label-${dept}"></div>
-                              <div class="chart-title" id="title-${dept}">Capex Projects</div>
-                            </div>`;
+                                  <div class="chart-card">
+                                    <div class="fw-bold mb-1">${dept}</div>
+                                    <canvas id="chart-${dept}" width="150" height="150"></canvas>
+                                    <div class="chart-center-label" id="label-${dept}"></div>
+                                    <div class="chart-title" id="title-${dept}">Capex Projects</div>
+                                  </div>`;
           }
 
           col.querySelector(".chart-card").addEventListener("click", () => {
@@ -507,7 +501,7 @@
             });
           } else if (dept === "Engineering") {
             departmentData[dept].push({
-              name: "Drawings",
+              name: "Drawings/PDI",
               fields: [
                 {
                   label: "Dhar Module",
@@ -545,7 +539,7 @@
             });
           } else if (dept === "Energy Mangement") {
             departmentData[dept].push({
-              name: "PPA (MW)",
+              name: "PPA",
               fields: [
                 {
                   label: "Solar",
@@ -588,7 +582,7 @@
             });
           } else if (dept === "O&M") {
             departmentData[dept].push({
-              name: "Commissioned Projects (MW)",
+              name: "Commissioned Projects",
               fields: [
                 {
                   label: "Rajnandgaon, Chattisgarh",
@@ -730,7 +724,7 @@
             });
           } else {
             departmentData[dept].push({
-              name: "Capex Projects (MW)",
+              name: "Capex Projects",
               fields: [
                 {
                   label: "Leh",
@@ -947,32 +941,32 @@
         const div = document.createElement("div");
         div.className = "card mb-3 p-3";
         div.innerHTML = `
-        <div class="mb-2">
-          <label>Label:</label>
-          <input type="text" class="form-control field-label" placeholder="Label" value="${label.replace(
-            /"/g,
-            "&quot;"
-          )}">
-        </div>
-        <div class="mb-2">
-          <label>Value:</label>
-          <input type="number" min="0" class="form-control field-value" placeholder="Value" value="${value}">
-        </div>
+              <div class="mb-2">
+                <label>Label:</label>
+                <input type="text" class="form-control field-label" placeholder="Label" value="${label.replace(
+                  /"/g,
+                  "&quot;"
+                )}">
+              </div>
+              <div class="mb-2">
+                <label>Value:</label>
+                <input type="number" min="0" class="form-control field-value" placeholder="Value" value="${value}">
+              </div>
 
-        <div class="mb-2">
-          <label>Tooltip Data:</label>
-          <div class="tooltip-list mb-2"></div>
-          <button type="button" class="btn btn-sm btn-outline-primary add-tooltip-btn mb-2">Add Tooltip Item</button>
-        </div>
+              <div class="mb-2">
+                <label>Tooltip Data:</label>
+                <div class="tooltip-list mb-2"></div>
+                <button type="button" class="btn btn-sm btn-outline-primary add-tooltip-btn mb-2">Add Tooltip Item</button>
+              </div>
 
-        <div class="mb-2">
-          <label>Table Data:</label>
-          <div class="tabledata-list mb-2"></div>
-          <button type="button" class="btn btn-sm btn-outline-primary add-tabledata-btn mb-2">Add Table Row</button>
-        </div>
+              <div class="mb-2">
+                <label>Table Data:</label>
+                <div class="tabledata-list mb-2"></div>
+                <button type="button" class="btn btn-sm btn-outline-primary add-tabledata-btn mb-2">Add Table Row</button>
+              </div>
 
-        <button type="button" class="btn btn-outline-danger" onclick="this.parentNode.remove()">Remove Label</button>
-      `;
+              <button type="button" class="btn btn-outline-danger" onclick="this.parentNode.remove()">Remove Label</button>
+            `;
         fieldsList.appendChild(div);
 
         // Pre-fill Tooltip Data
@@ -997,16 +991,16 @@
         const div = document.createElement("div");
         div.className = "input-group mb-2";
         div.innerHTML = `
-        <input type="text" class="form-control tooltip-key" placeholder="Key" value="${key.replace(
-          /"/g,
-          "&quot;"
-        )}">
-        <input type="text" class="form-control tooltip-value" placeholder="Value" value="${value.replace(
-          /"/g,
-          "&quot;"
-        )}">
-        <button type="button" class="btn btn-outline-danger" onclick="this.parentNode.remove()">&#10006;</button>
-      `;
+              <input type="text" class="form-control tooltip-key" placeholder="Key" value="${key.replace(
+                /"/g,
+                "&quot;"
+              )}">
+              <input type="text" class="form-control tooltip-value" placeholder="Value" value="${value.replace(
+                /"/g,
+                "&quot;"
+              )}">
+              <button type="button" class="btn btn-outline-danger" onclick="this.parentNode.remove()">&#10006;</button>
+            `;
         container.appendChild(div);
       }
 
@@ -1020,24 +1014,24 @@
         const div = document.createElement("div");
         div.className = "input-group mb-2";
         div.innerHTML = `
-        <input type="text" class="form-control td-issues" placeholder="Issues" value="${issues.replace(
-          /"/g,
-          "&quot;"
-        )}">
-        <input type="text" class="form-control td-status" placeholder="Status" value="${status.replace(
-          /"/g,
-          "&quot;"
-        )}">
-        <input type="text" class="form-control td-dept" placeholder="Department" value="${dept.replace(
-          /"/g,
-          "&quot;"
-        )}">
-        <input type="text" class="form-control td-date" placeholder="Date" value="${date.replace(
-          /"/g,
-          "&quot;"
-        )}">
-        <button type="button" class="btn btn-outline-danger" onclick="this.parentNode.remove()">&#10006;</button>
-      `;
+              <input type="text" class="form-control td-issues" placeholder="Issues" value="${issues.replace(
+                /"/g,
+                "&quot;"
+              )}">
+              <input type="text" class="form-control td-status" placeholder="Status" value="${status.replace(
+                /"/g,
+                "&quot;"
+              )}">
+              <input type="text" class="form-control td-dept" placeholder="Department" value="${dept.replace(
+                /"/g,
+                "&quot;"
+              )}">
+              <input type="text" class="form-control td-date" placeholder="Date" value="${date.replace(
+                /"/g,
+                "&quot;"
+              )}">
+              <button type="button" class="btn btn-outline-danger" onclick="this.parentNode.remove()">&#10006;</button>
+            `;
         container.appendChild(div);
       }
       function getFieldsFromModal() {
@@ -1203,19 +1197,21 @@
             chartColors = [vibrantColors[colorIndex], "#dee2e6"];
           }
           col.innerHTML = `
-                  <div class="chart-card ${
-                    index === homeSelectedStats[dept] ? "selected-stat" : ""
-                  }">
-                    <canvas id="dept-chart-${dept}-${index}" width="150" height="150"></canvas>
-                    <div class="chart-center-label" id="dept-label-${dept}-${index}"></div>
-                    <div class="chart-title">${stat.name}</div>
-                    <div class="d-flex justify-content-center gap-2 mt-3">
-                      <button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); editStat('${dept}', ${index})"><i class="bi bi-pencil"></i> Edit</button>
-                      <button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); selectForHome('${dept}', ${index});"><i class="bi bi-house"></i> Show on Home</button>
-                      <button class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); deleteStat('${dept}', ${index})"><i class="bi bi-trash"></i> Delete</button>
-                    </div>
-                  </div>
-                `;
+                        <div class="chart-card ${
+                          index === homeSelectedStats[dept]
+                            ? "selected-stat"
+                            : ""
+                        }">
+                          <canvas id="dept-chart-${dept}-${index}" width="150" height="150"></canvas>
+                          <div class="chart-center-label" id="dept-label-${dept}-${index}"></div>
+                          <div class="chart-title">${stat.name}</div>
+                          <div class="d-flex justify-content-center gap-2 mt-3">
+                            <button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); editStat('${dept}', ${index})"><i class="bi bi-pencil"></i> Edit</button>
+                            <button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); selectForHome('${dept}', ${index});"><i class="bi bi-house"></i> Show on Home</button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); deleteStat('${dept}', ${index})"><i class="bi bi-trash"></i> Delete</button>
+                          </div>
+                        </div>
+                      `;
           departmentStats.appendChild(col);
           // Chart click to select for home
           col.querySelector("canvas").onclick = () => {
@@ -1287,63 +1283,70 @@
                 const clickedTableData =
                   chartInstance.data.datasets[0].tableData[clickedIndex] || [];
 
-                showTableForLabel(
-                  dept,
-                  stat.name,
-                  clickedLabel,
-                  clickedTableData
+                document
+                  .getElementById("chartDetailsSection")
+                  .scrollIntoView({ behavior: "smooth", block: "start" });
+
+                const dropdown = document.getElementById(
+                  `projectDropdown-${dept}`
                 );
-                section.scrollIntoView({ behavior: "smooth", block: "start" });
+                if (dropdown) {
+                  dropdown.value = clickedLabel;
+                  dropdown.dispatchEvent(new Event("change"));
+                }
               }
             };
 
           // Center label: total if fields, else current/total
           let total = stat.fields.reduce((sum, f) => sum + f.value, 0);
 
-          if (dept === "Contracts & Procurement") {
+          // Department chart center label
+          if (dept === "Energy Mangement") {
+            document.getElementById(
+              `dept-label-${dept}-${index}`
+            ).innerHTML = `${total}<br>MW`;
+          } else if (dept === "Contracts & Procurement") {
             total /= 2;
+            document.getElementById(
+              `dept-label-${dept}-${index}`
+            ).innerHTML = `${total}MW<br>tenders floated`;
+          } else {
+            document.getElementById(
+              `dept-label-${dept}-${index}`
+            ).innerHTML = `${total}<br>MW`;
           }
-          document.getElementById(`dept-label-${dept}-${index}`).textContent =
-            total;
         });
+        const dropdownId = `projectDropdown-${dept}`;
+        const detailsId = `projectDetails-${dept}`;
+        const issuesId = `projectIssues-${dept}`;
 
-        // targetSection.innerHTML = `<h4 class="mt-4 mb-2">Department Targets</h4>`;
-        // if (targets[dept].length === 0) {
-        //   targetSection.innerHTML += `<p>No targets added.</p>`;
-        // } else {
-        //   let tableHTML = `
-        //   <table class="target-table">
-        //     <thead>
-        //       <tr>
-        //         <th>Title</th>
-        //         <th>Target Date</th>
-        //         <th>Status</th>
-        //       </tr>
-        //     </thead>
-        //     <tbody>
-        // `;
+        const dropdownOptions = stat.fields
+          .map((f) => `<option value="${f.label}">${f.label}</option>`)
+          .join("");
 
-        //   targets[dept].forEach((t) => {
-        //     const status = getTargetStatus(t.date);
-        //     tableHTML += `
-        //     <tr>
-        //       <td>${t.title}</td>
-        //       <td>${t.date}</td>
-        //       <td><span class="${status.class}">${status.text}</span></td>
-        //     </tr>
-        //   `;
-        //   });
+        const projectTabHTML = `
+        <div class="mt-3">
+          <label for="${dropdownId}" class="form-label">Select Project:</label>
+          <select class="form-select form-select-sm" id="${dropdownId}">
+            ${dropdownOptions}
+          </select>
 
-        //   tableHTML += `
-        //     </tbody>
-        //   </table>
-        // `;
+          <ul class="nav nav-tabs mt-3" id="tabs-${dept}" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#${detailsId}" type="button" role="tab">Details</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" data-bs-toggle="tab" data-bs-target="#${issuesId}" type="button" role="tab">Issues</button>
+            </li>
+          </ul>
 
-        //   targetSection.innerHTML += tableHTML;
-        // }
-
-        renderDepartmentTable(dept);
-        // document.getElementById("editTableBtn").onclick = () => editTable(dept);
+          <div class="tab-content mt-2">
+            <div class="tab-pane fade show active" id="${detailsId}" role="tabpanel"></div>
+            <div class="tab-pane fade" id="${issuesId}" role="tabpanel"></div>
+          </div>
+        </div>
+      `;
+        departmentStats.innerHTML += projectTabHTML;
       }
 
       function goToDepartmentTab(departmentName) {
@@ -1353,73 +1356,227 @@
           }
         });
       }
-      function showTableForLabel(dept, statName, label, tableData) {
+      function showTableForLabel(dept, statName, label, tableData = []) {
         const section = document.getElementById("chartDetailsSection");
 
         const stat = departmentData[dept].find((s) => s.name === statName);
         if (!stat || !stat.fields) return;
 
+        // Build dropdown
         let html = `
-        <h5>${dept} - ${statName} Details - ${label}</h5>
-        <div class="mb-3">
-          <label class="form-label">Select Label:</label>
-          <select class="form-select mb-3" id="labelDropdown">
-      `;
+          <div class="mb-2">
+            <select class="form-select" id="projectDropdown-${dept}">
+        `;
 
         stat.fields.forEach((f) => {
-          html += `<option ${f.label === label ? "selected" : ""}>${
-            f.label
-          }</option>`;
+          html += `<option value="${f.label}" ${
+            f.label === label ? "selected" : ""
+          }>${f.label}</option>`;
         });
 
-        html += `</select>`;
+        html += `</select></div>`;
 
+        // Tabs UI
         html += `
-        <table class="target-table mb-3">
-          <thead>
-            <tr>
-              <th>SN</th>
-              <th>Issues</th>
-              <th>Present status</th>
-              <th>Concerned Dept</th>
-              <th>Target date/ Requirement date</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
+  <ul class="nav nav-tabs w-100 flex-nowrap overflow-auto mt-2" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-pane-contract-documents" type="button" role="tab">
+        Contract Documents
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-pane-dpr" type="button" role="tab">
+        Daily Progress Report
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-pane-mpr" type="button" role="tab">
+        Monthly Progress Report
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-pane-contractor" type="button" role="tab">
+        Correspondences with Contractor
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-pane-stakeholders" type="button" role="tab">
+        Correspondences with other stakeholders
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-pane-tariff" type="button" role="tab">
+        Tariff Petition
+      </button>
+    </li>
+  </ul>
 
-        tableData.forEach((item, i) => {
-          html += `
-          <tr>
-            <td>${i + 1}</td>
-            <td>${item.issues || ""}</td>
-            <td>${item.status || ""}</td>
-            <td>${item.dept || ""}</td>
-            <td>${item.date || ""}</td>
-          </tr>
-        `;
-        });
-
-        html += `</tbody></table></div>`;
+  <div class="tab-content p-2 border border-top-0 rounded-bottom">
+    <div class="tab-pane fade show active" id="tab-pane-contract-documents" role="tabpanel"></div>
+    <div class="tab-pane fade" id="tab-pane-dpr" role="tabpanel"></div>
+    <div class="tab-pane fade" id="tab-pane-mpr" role="tabpanel"></div>
+    <div class="tab-pane fade" id="tab-pane-contractor" role="tabpanel"></div>
+    <div class="tab-pane fade" id="tab-pane-stakeholders" role="tabpanel"></div>
+    <div class="tab-pane fade" id="tab-pane-tariff" role="tabpanel"></div>
+  </div>
+`;
 
         section.innerHTML = html;
 
-        document
-          .getElementById("labelDropdown")
-          .addEventListener("change", function () {
-            const selectedLabel = this.value;
-            const selectedField = stat.fields.find(
-              (f) => f.label === selectedLabel
-            );
-            showTableForLabel(
-              dept,
-              statName,
-              selectedLabel,
-              selectedField.tableData || []
-            );
-          });
+        // Fill tabs with selected field data
+        function renderTabsForProject(label) {
+          const field = stat.fields.find((f) => f.label === label);
+          if (!field) return;
 
-        // section.scrollIntoView({ behavior: "smooth", block: "start" });
+          // --- Contract Documents ---
+          const contractDocumentsTab = document.getElementById(
+            "tab-pane-contract-documents"
+          );
+          if (field.tableData && field.tableData.length > 0) {
+            let contractDocumentsTable = `
+            <table class="target-table mb-0">
+              <thead>
+                <tr>
+                  <th>S.No.</th>
+                  <th>Document Name</th>
+                  <th>Uploaded On</th>
+                  <th>View Document</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>Important Document</td>
+                  <td>2025-07-31</td>
+                  <td><a href="/" target="_blank">Click here to View Document</a></td>
+                </tr>
+              </tbody>
+            </table>
+          `;
+            contractDocumentsTab.innerHTML = contractDocumentsTable;
+          } else {
+            contractDocumentsTab.innerHTML = `<em>No contract documents available</em>`;
+          }
+
+          // --- Daily Progress Report ---
+          const dprTab = document.getElementById("tab-pane-dpr");
+          dprTab.innerHTML = `
+          <table class="target-table mb-0">
+            <thead>
+              <tr>
+                <th>S.No.</th>
+                <th>Dated</th>
+                <th>View Document</th>
+                <th>Uploaded On</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>2025-07-31</td>
+                <td><a href="/" target="_blank">Click here to View Document</a></td>
+                <td>Important Document</td>
+              </tr>
+            </tbody>
+          </table>
+        `;
+
+          // --- Monthly Progress Report ---
+          const mprTab = document.getElementById("tab-pane-mpr");
+          mprTab.innerHTML = `
+          <table class="target-table mb-0">
+            <thead>
+              <tr>
+                <th>S.No.</th>
+                <th>Dated</th>
+                <th>View Document</th>
+                <th>Uploaded On</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>2025-07-31</td>
+                <td><a href="/" target="_blank">Click here to View Document</a></td>
+                <td>Important Document</td>
+              </tr>
+            </tbody>
+          </table>
+        `;
+
+          // --- Correspondences with Contractor ---
+          const contractorTab = document.getElementById("tab-pane-contractor");
+          contractorTab.innerHTML = `
+          <table class="target-table mb-0">
+            <thead>
+              <tr>
+                <th>S.No.</th>
+                <th>Subject</th>
+                <th>Dated</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Uploaded On</th>
+                <th>View Document</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Request for Revised Timeline</td>
+                <td>2025-06-15</td>
+                <td>ABC Constructions Ltd.</td>
+                <td>SECI Project Division</td>
+                <td>2025-07-01</td>
+                <td><a href="/" target="_blank">Click here to View Document</a></td>
+              </tr>
+            </tbody>
+          </table>
+        `;
+          // --- Correspondences with other stakeholders ---
+          const stakeholdersTab = document.getElementById(
+            "tab-pane-stakeholders"
+          );
+          stakeholdersTab.innerHTML = `
+          <table class="target-table mb-0">
+            <thead>
+              <tr>
+                <th>S.No.</th>
+                <th>Subject</th>
+                <th>Dated</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Uploaded On</th>
+                <th>View Document</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Request for Revised Timeline</td>
+                <td>2025-06-15</td>
+                <td>ABC Constructions Ltd.</td>
+                <td>SECI Project Division</td>
+                <td>2025-07-01</td>
+                <td><a href="/" target="_blank">Click here to View Document</a></td>
+              </tr>
+            </tbody>
+          </table>
+        `;
+
+          // --- Tariff Petition ---
+          const tariffTab = document.getElementById("tab-pane-tariff");
+          tariffTab.innerHTML = `<em>Tariff petition not uploaded</em>`;
+        }
+
+        // Initial load
+        renderTabsForProject(label);
+
+        // Dropdown change event
+        document
+          .getElementById(`projectDropdown-${dept}`)
+          .addEventListener("change", (e) => {
+            renderTabsForProject(e.target.value);
+          });
       }
       function renderDepartmentTable(dept) {
         const tableData = departmentTables[dept];
@@ -1468,13 +1625,13 @@
         const detailsSection = document.getElementById("chartDetailsSection");
 
         let html = `
-                          <h4>Details for: ${stat.name}</h4>
-                          <ul class="list-group mb-3">
-                            <li class="list-group-item"><strong>Total:</strong> ${stat.fields.reduce(
-                              (sum, f) => sum + f.value,
-                              0
-                            )}</li>
-                          `;
+                                <h4>Details for: ${stat.name}</h4>
+                                <ul class="list-group mb-3">
+                                  <li class="list-group-item"><strong>Total:</strong> ${stat.fields.reduce(
+                                    (sum, f) => sum + f.value,
+                                    0
+                                  )}</li>
+                                `;
 
         if (stat.fields && stat.fields.length > 0) {
           html += `<li class="list-group-item"><strong>Breakdown:</strong><ul>`;
@@ -1536,10 +1693,18 @@
         );
 
         let total = stat.fields.reduce((sum, f) => sum + f.value, 0);
-        if (dept === "Contracts & Procurement") {
+        // Home chart center label
+        if (dept === "Energy Mangement") {
+          document.getElementById(`label-${dept}`).innerHTML = `${total}<br>MW`;
+        } else if (dept === "Contracts & Procurement") {
           total /= 2; // Special case for Contracts & Procurement
+          document.getElementById(
+            `label-${dept}`
+          ).innerHTML = `${total}MW<br>tenders floated`;
+        } else {
+          document.getElementById(`label-${dept}`).textContent = total;
+          document.getElementById(`label-${dept}`).innerHTML = `${total}<br>MW`;
         }
-        document.getElementById(`label-${dept}`).textContent = total;
         document.getElementById(`title-${dept}`).textContent = stat.name;
         chart.update();
       }
